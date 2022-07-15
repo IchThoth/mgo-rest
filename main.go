@@ -1,18 +1,20 @@
 package main
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"gopkg.in/mgo.v2"
+	"net/http"
 
 	"github.com/IchThoth/Go-MongoDB-REST-API/controllers"
+	"github.com/julienschmidt/httprouter"
+	"gopkg.in/mgo.v2"
 )
 
 func main() {
 	r := httprouter.New()
 	uc := controllers.NewUserController(getSession())
-	r.GET("")
-	r.POST("")
-	r.DELETE("")
+	r.GET("user/:id", uc.GetUser)
+	r.POST("/user", uc.CreateUser)
+	r.DELETE("/user/:id", uc.DeleteUser)
+	http.ListenAndServe("localhost:8080", r)
 }
 
 func getSession() *mgo.Session {
